@@ -98,8 +98,9 @@ Weekly (Mondays) add a trend section and an **Innovator spotlight**: one small s
 
 ## Open decisions
 1. **Where the daily job runs: DECIDED (2026-09-19), scheduled cloud agent (routine).** Cron is UTC, so 09:00 IST = `30 3 * * *`. Not created yet. Cloud runs start in a fresh sandbox with a git checkout of a repo and cannot see local files, so setup needs: the project in a GitHub repo, the Gmail and Drive connectors attached, and a self-contained prompt. Cost and usage limits: unconfirmed, check before enabling.
-2. **Where history is stored: OPEN.** The cloud sandbox is wiped each run, so baselines go either in Google Drive or committed back to the repo.
-3. **Recipient address: CONFIRMED** as `aditijain1100@gmail.com` (differs from the account email `aditijain11021@gmail.com`, owner confirmed the former).
+2. **Email sending: BLOCKED (found 2026-09-19).** The Gmail connector on the owner's claude.ai account returned "Insufficient scope" (needs gmail.send or gmail.compose) when sending a PDF. The daily 9 AM email cannot work until the connector is re-authorised with send permission, or another sender is used (for example a Python script using Gmail API OAuth with `credentials.json`/`token.json`, as in the WAT layout, or SMTP with a Google app password stored in `.env`). Resolve this before scheduling anything.
+3. **Where history is stored: OPEN.** The cloud sandbox is wiped each run, so baselines go either in Google Drive or committed back to the repo.
+4. **Recipient address: CONFIRMED** as `aditijain1100@gmail.com` (differs from the account email `aditijain11021@gmail.com`, owner confirmed the former).
 
 ## Build order
 1. Phase 1 for Tata 1mg: verify competitors, confirm the list with the owner.
@@ -113,3 +114,5 @@ Weekly (Mondays) add a trend section and an **Innovator spotlight**: one small s
 
 - 2026-09-19: Workflow created. No tools built yet.
 - 2026-09-19: Phase 1 run for Tata 1mg. Confirmed list in `profiles/tata_1mg_competitors.md`. Business Standard returns 403 to automated fetch, so use Entrackr, Inc42, Investing.com or company filings instead. Many "top e-pharmacy" listicles are unsourced promotional copy; do not cite them for numbers. Old market-share claims (2023) circulate as if current; always check the date.
+- 2026-09-19: `git push` to github.com/aditijain-11/Clarix failed with "Permission denied to aditijain-1111": the Mac's stored GitHub credentials belong to a different account than the repo owner. Fix by adding that account as a collaborator or signing in as the owner. Never work around this by hunting for other credentials.
+- 2026-09-19: PDF reports: reportlab's built-in fonts lack the rupee sign, so write "Rs". Gmail attachments go in as base64 in the tool call (25 MB cap), so keep PDFs small.
