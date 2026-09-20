@@ -89,6 +89,7 @@ Weekly (Mondays) add a trend section and an **Innovator spotlight**: one small s
 - Email body rules: the body is the brief itself (summary and top findings), not a table of contents for an attachment. No project status (what is built, pushed or scheduled), no tool or sender signature lines. Anything about how the system works goes in chat or this workflow, not in the reader's inbox.
 - Supporting data (competitor master list, price basket history, change log) lives in Google Drive.
 - Do not send the first real email until the owner has approved a sample of it.
+- **Archive every sent email in MongoDB** with `tools/save_email.py` (fields: `company_name`, `date`, `header`, `content`; content is the full body as one string). Save only after the send succeeds. Needs `MONGODB_URI` in `.env` (an Atlas connection string). The archive also lets later runs check what was already reported.
 
 ## Edge cases
 - **Source blocks or rate-limits us:** back off, skip that source today, note it in the email's data-quality section, do not retry aggressively.
@@ -100,7 +101,7 @@ Weekly (Mondays) add a trend section and an **Innovator spotlight**: one small s
 ## Open decisions
 1. **Where the daily job runs: DECIDED (2026-09-19), scheduled cloud agent (routine).** Cron is UTC, so 09:00 IST = `30 3 * * *`. Not created yet. Cloud runs start in a fresh sandbox with a git checkout of a repo and cannot see local files, so setup needs: the project in a GitHub repo, the Gmail and Drive connectors attached, and a self-contained prompt. Cost and usage limits: unconfirmed, check before enabling.
 2. **Email sending: RESOLVED 2026-09-20.** The owner disconnected and reconnected the Gmail connector (account aditijain11021@gmail.com) and the send worked; a PDF attachment was delivered to aditijain1100@gmail.com. Cause of the earlier failure: the connector's Google grant lacked send permission, and changing other Google settings did not fix it; only reconnecting the connector did. Mail is sent FROM the connected account (aditijain11021@gmail.com). Original problem for reference: The Gmail connector on the owner's claude.ai account returned "Insufficient scope" (needs gmail.send or gmail.compose) when sending a PDF. The daily 9 AM email cannot work until the connector is re-authorised with send permission, or another sender is used (for example a Python script using Gmail API OAuth with `credentials.json`/`token.json`, as in the WAT layout, or SMTP with a Google app password stored in `.env`). Resolve this before scheduling anything.
-3. **Where history is stored: OPEN.** The cloud sandbox is wiped each run, so baselines go either in Google Drive or committed back to the repo.
+3. **Where history is stored: sent emails DECIDED (MongoDB, see Phase 5); competitor baselines/snapshots still OPEN** (MongoDB would also work for them). The cloud sandbox is wiped each run, so baselines go either in Google Drive or committed back to the repo.
 4. **Recipient address: CONFIRMED** as `aditijain1100@gmail.com` (differs from the account email `aditijain11021@gmail.com`, owner confirmed the former).
 
 ## Build order
