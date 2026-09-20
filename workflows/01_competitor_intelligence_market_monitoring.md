@@ -86,6 +86,7 @@ Weekly (Mondays) add a trend section and an **Innovator spotlight**: one small s
 - **Daily email at 09:00 IST (03:30 UTC)** to `REPORT_EMAIL_TO`. Subject format: `[<Business>] Competitor brief, <date>`.
 - Email structure: one-line summary, top items (what / why it matters / lens / impact / action), source links, data-quality notes (which sources failed today).
 - If nothing meaningful changed, send a short "quiet day" note. Do not pad.
+- Email body rules: the body is the brief itself (summary and top findings), not a table of contents for an attachment. No project status (what is built, pushed or scheduled), no tool or sender signature lines. Anything about how the system works goes in chat or this workflow, not in the reader's inbox.
 - Supporting data (competitor master list, price basket history, change log) lives in Google Drive.
 - Do not send the first real email until the owner has approved a sample of it.
 
