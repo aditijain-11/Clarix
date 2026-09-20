@@ -4,6 +4,7 @@
 .tmp/
 __pycache__/
 *.pyc
+*.pdf
 credentials.json
 token.json
 .DS_Store

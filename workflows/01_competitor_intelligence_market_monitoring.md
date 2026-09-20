@@ -89,7 +89,7 @@ Weekly (Mondays) add a trend section and an **Innovator spotlight**: one small s
 - Email body rules: the body is the brief itself (summary and top findings), not a table of contents for an attachment. No project status (what is built, pushed or scheduled), no tool or sender signature lines. Anything about how the system works goes in chat or this workflow, not in the reader's inbox.
 - Supporting data (competitor master list, price basket history, change log) lives in Google Drive.
 - Do not send the first real email until the owner has approved a sample of it.
-- **Archive every sent email in MongoDB** with `tools/save_email.py` (fields: `company_name`, `date`, `header`, `content`; content is the full body as one string). Save only after the send succeeds. Needs `MONGODB_URI` in `.env` (an Atlas connection string). The archive also lets later runs check what was already reported.
+- **Archive every sent email in MongoDB** with `tools/save_email.py` (fields: `company_name`, `date`, `header` (the subject), `content` (the text extracted from the attached PDF, one string, empty if no PDF), `email_content` (the email body, one string)). Only text is stored; the PDF file itself is not kept. Save only after the send succeeds. Needs `MONGODB_URI` in `.env` (an Atlas connection string). The archive also lets later runs check what was already reported.
 
 ## Edge cases
 - **Source blocks or rate-limits us:** back off, skip that source today, note it in the email's data-quality section, do not retry aggressively.
@@ -117,4 +117,5 @@ Weekly (Mondays) add a trend section and an **Innovator spotlight**: one small s
 - 2026-09-19: Workflow created. No tools built yet.
 - 2026-09-19: Phase 1 run for Tata 1mg. Confirmed list in `profiles/tata_1mg_competitors.md`. Business Standard returns 403 to automated fetch, so use Entrackr, Inc42, Investing.com or company filings instead. Many "top e-pharmacy" listicles are unsourced promotional copy; do not cite them for numbers. Old market-share claims (2023) circulate as if current; always check the date.
 - 2026-09-19: `git push` to github.com/aditijain-11/Clarix failed with "Permission denied to aditijain-1111": the Mac's stored GitHub credentials belong to a different account than the repo owner. Fix by adding that account as a collaborator or signing in as the owner. Never work around this by hunting for other credentials. RESOLVED 2026-09-20: the owner changed the git config; `origin` now uses the SSH host alias `github-aditi11` and the push succeeded.
+- 2026-09-20: Owner rule: never store generated PDFs inside the repo (not under `.tmp/` either; `*.pdf` is now gitignored). Generate them in the system temp folder, attach and send, archive the extracted text in MongoDB, then discard the file. The sent copy lives in Gmail.
 - 2026-09-19: PDF reports: reportlab's built-in fonts lack the rupee sign, so write "Rs". Gmail attachments go in as base64 in the tool call (25 MB cap), so keep PDFs small.
